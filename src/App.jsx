@@ -1,35 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+export default function Todo() {
+  const [list, setList] = useState(['star', 'dsf', 'sdf']);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInput = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleClickButton = () => {
+    if (inputValue === '') return;
+    setList([...list, inputValue]);
+    setInputValue('');
+  };
 
   return (
-    <>
+    <div className="container">
+      <h1 className="title">To-do list</h1>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <input
+          type="text"
+          onChange={handleInput}
+          value={inputValue}
+          placeholder="type here.."
+        />
+        <button onClick={handleClickButton}>add</button>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="items">
+        <ul>
+          {list.map((value, i) => {
+            return <li key={i}>{value}</li>;
+          })}
+        </ul>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
-
-export default App
