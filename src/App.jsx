@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './App.css';
 
 export default function Todo() {
-  const [list, setList] = useState(['star', 'dsf', 'sdf']);
+  const [list, setList] = useState([{ text: 'star', done: false }]);
   const [inputValue, setInputValue] = useState('');
 
   const handleInput = (e) => {
@@ -11,8 +11,30 @@ export default function Todo() {
 
   const handleClickButton = () => {
     if (inputValue === '') return;
-    setList([...list, inputValue]);
+    const newObj = { text: inputValue, done: false };
+    setList([...list, newObj]);
     setInputValue('');
+  };
+
+  const handleEnter = (e) => {
+    if (e.key === 'Enter') {
+      handleClickButton();
+    }
+  };
+
+  const handleDeleteButton = (i) => {
+    const newList = list.filter((_, index) => index !== i);
+    setList(newList);
+  };
+
+  const toggleItem = (i) => {
+    const newList = list.map((item, index) => {
+      if (i === index) {
+        return { ...item, done: !item.done };
+      }
+      return item;
+    });
+    setList(newList);
   };
 
   return (
@@ -22,6 +44,7 @@ export default function Todo() {
         <input
           type="text"
           onChange={handleInput}
+          onKeyDown={handleEnter}
           value={inputValue}
           placeholder="type here.."
         />
@@ -30,7 +53,21 @@ export default function Todo() {
       <div className="items">
         <ul>
           {list.map((value, i) => {
-            return <li key={i}>{value}</li>;
+            return (
+              <div className="item" key={i}>
+                <li
+                  onClick={() => {
+                    toggleItem(i);
+                  }}
+                  style={{
+                    textDecoration: value.done ? 'line-through' : 'none',
+                  }}
+                >
+                  {value.text}{' '}
+                </li>
+                <button onClick={() => handleDeleteButton(i)}>삭제</button>
+              </div>
+            );
           })}
         </ul>
       </div>
